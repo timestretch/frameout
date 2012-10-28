@@ -1,0 +1,32 @@
+<h3>Idea</h3>
+
+<form method="post" action="/idea/save">
+	<input type="hidden" name="idea_id" value="<%= idea_id %>">
+	<div>
+		<label for="short_description">Short Description</label>
+		<input type="text" name="short_description" value="<%= short_description %>" 			style="width:400px">
+	</div>
+	<div>
+		<label for="long_description">Long Description</label>
+		<textarea name="long_description" style="width:400px" rows="16"><%= long_description %></textarea>
+	</div>
+	<div>
+		<div class="form_offset"></div>
+		<input type="checkbox" name="public" <%= "checked" if public.to_i != 0 %>> Public
+	</div>
+	<% if created %>
+	<br>
+	<div>
+		<label for="long_description">Created</label>
+		<%= created %>
+	</div>
+	<% end %>
+	<br>
+	<div>
+		<div class="form_offset"></div>
+		<input type="submit" name="action" value="Save">
+		<input type="submit" name="action" value="Delete">
+	</div>
+</form>
+
+

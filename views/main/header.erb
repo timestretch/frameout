@@ -1,0 +1,11 @@
+<div class="header">
+<h1><a href="/"><%= site_name %></a></h1>
+</div>
+
+<% if current_user %>
+<div class="navbar">
+	<% controllers.each do |controller| %>
+	<span class="navitem <%= "selected" if controller['class'] == current_class %>"><a href="<%= controller['url'] %>"><%= controller['title'] %></a></span>
+	<% end %>
+</div>
+<% end %>
