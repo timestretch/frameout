@@ -1,4 +1,3 @@
-require "SecureRandom"
 require 'digest/sha2'
 require 'bcrypt'
 

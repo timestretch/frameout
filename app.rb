@@ -1,3 +1,5 @@
+# By Erik Wrenholt 2012
+
 require 'rubygems' if RUBY_VERSION < '1.9'
 require 'sinatra';
 require 'erb'
@@ -18,77 +20,74 @@ require 'controllers/user_helper'
 
 class App < Sinatra::Base
 
-  enable :sessions
+	enable :sessions
 
-  # Sinatra's sessions are signed by default, with a HMAC algorithm, which is
-  # the correct way to sign data so that it can be verified later.
-  set :session_secret, SITE_SECRET_KEY
+	# Sinatra's sessions are signed by default, with a HMAC algorithm, which is
+	# the correct way to sign data so that it can be verified later.
+	set :session_secret, SITE_SECRET_KEY
 
-  def render_page(title, body)
-    
-    header = erb :"main/header", :locals => {
-      :site_name => SITE_NAME,
-      :current_class => self.class.to_s,
-      :controllers => controller_list
-    }
+	def render_page(title, body)
+		
+		header = erb :"main/header", :locals => {
+			:site_name => SITE_NAME,
+			:current_class => self.class.to_s,
+			:controllers => controller_list
+		}
 
-    footer = erb :"main/footer", :locals => {
-      :by_line => "&copy; #{Time.now.year} #{SITE_BY_LINE}",
-    }
+		footer = erb :"main/footer", :locals => {
+			:by_line => "&copy; #{Time.now.year} #{SITE_BY_LINE}",
+		}
 
-    erb :"main/layout", :locals => {
-      :header => header,
-      :footer => footer,
-      :title => title,
-      :body => body,
-    }
-  end
+		erb :"main/layout", :locals => {
+			:header => header,
+			:footer => footer,
+			:title => title,
+			:body => body,
+		}
+	end
 
-  def error(error)
-    render_page("Error", "<div class=\"error\">" + error + "</div>")
-  end
+	def error(error)
+		render_page("Error", "<div class=\"error\">" + error + "</div>")
+	end
 
-  # Fixme: it would be better to have each controller register its own tab and info.
-    
-  def controller_list
-    return [
-        {'url'=>'/user/profile', 'title'=>'Profile', 'class'=>'Users'},
-        {'url'=>'/idea/list/', 'title'=>'Ideas', 'class'=>'Ideas'}]
-  end
+	# Fixme: it would be better to have each controller register its own tab and info.
+		
+	def controller_list
+		return [{'url'=>'/user/profile', 'title'=>'Profile', 'class'=>'Users'},
+				{'url'=>'/idea/list/', 'title'=>'Ideas', 'class'=>'Ideas'}]
+	end
 
-  def db
-    @db ||= Mysql.new(DB_HOST, DB_USER, DB_PASS, DB_NAME)
-  end
+	def db
+		@db ||= Mysql.new(DB_HOST, DB_USER, DB_PASS, DB_NAME)
+	end
 
-  def current_user
-    email = session[:user_email]
-    if email
-      email
-    else
-      nil
-    end
-  end
+	def current_user
+		email = session[:user_email]
+		if email
+			email
+		else
+			nil
+		end
+	end
 
-  def logged_in?
-    current_user ? true : false
-  end
+	def logged_in?
+		current_user ? true : false
+	end
 
-  not_found do
-    render_page("Page not found!", "Sorry, the page you requested was not found!")
-  end
+	not_found do
+		render_page("Page not found!", "Sorry, the page you requested was not found!")
+	end
 
 end
 
 class Root < App
 # Non-secured methods....
-  get '/?' do
-    if current_user
-      redirect '/user/profile'
-    else
-      body = erb :"pages/home"
-      render_page("Home", body)
-    end
-  end
+	get '/?' do
+		if current_user
+			redirect '/user/profile'
+		else
+			body = erb :"pages/home"
+			render_page("Home", body)
+		end
+	end
 end
-
-
