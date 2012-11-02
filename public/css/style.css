@@ -62,6 +62,8 @@ input:not([type=submit]):not([type=file]):not([type=checkbox])
 	padding: 6px;
 }
 
+/* Navigation Tabs */
+
 .navbar
 {
 	margin-top: 8px;
@@ -80,6 +82,8 @@ input:not([type=submit]):not([type=file]):not([type=checkbox])
 {
 color: white;
 }
+
+/* Ideas */
 
 .idea
 {

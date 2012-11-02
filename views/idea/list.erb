@@ -5,8 +5,8 @@
 		<p><%= idea['long_description']%></p>
 		
 		<p><%= idea['created']%> by <%= idea['email'] %> 
-			<% if idea['email'] == current_user %>
+		<% if idea['email'] == current_user %>
 			<a href="/idea/edit/<%= idea['idea_id']%>">Edit</a></p>
-			<% end %>
-	</div>
+		<% end %>
+</div>
 <% end %>

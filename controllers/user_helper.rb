@@ -17,6 +17,7 @@ class UserHelper
 		return false
 	end
 	
+	# Return nil on success, or the error string.
 	def register(params, ip)
 	
 		return "Please enter a valid email address" if !params[:email]
@@ -29,8 +30,8 @@ class UserHelper
 		return "The passwords did not match. Please retype them." if params[:password] != params[:password2] 
 		
 		begin
-      # Hash the password before running through bcrypt.
-      # When checking passwords sent from iOS apps, sha-256 before transmitting.
+			# Hash the password before running through bcrypt.
+			# Can always sha-256 before transmitting.
 			h = Digest::SHA2.new << params[:password]
 			hash = BCrypt::Password.create(h.to_s)
 			
@@ -59,6 +60,7 @@ class UserHelper
 		end
 	end
 	
+	# Login and verify password BCrypt hash.
 	def login(params, ip)
 	
 		res = @db.query("SELECT email, password_hash 
