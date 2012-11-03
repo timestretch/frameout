@@ -1,8 +1,9 @@
 require 'app'
 
-# This will be mounted on /contact
+# This will be mounted on /idea
 class Ideas < App
 
+	# Make sure we are authenticated before accessing this area.
 	before do
 		redirect '/user/login' if !logged_in?
 	end
