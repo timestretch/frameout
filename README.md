@@ -24,9 +24,9 @@ Source Code
 
 Each controller must be added to the config.ru rackup file. Rack directs routes starting with a particular prefix to the appropriate controller. 
 
-The base class and some useful helper utilities are in "app.rb". The configuration variables used in app.rb are in config.rb. Templates are located in the "views" directory. Each controller has its own subdirectory. The login views are present in the "user" sub-directory.
+The base class and some useful helper utilities are in "app.rb". The configuration variables used in app.rb are in config.rb. Templates are located in the "views" directory. Each controller has its own subdirectory for erb templates. The login views are present in the "user" sub-directory.
 
-I use tabs, equivalent to 4 spaces. You can switch them to two spaces if that looks better to you.
+I use tabs, equivalent to 4 spaces. You may switch them to two spaces if that looks better to you.
 
 To-Do
 -----
