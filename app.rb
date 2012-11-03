@@ -28,16 +28,19 @@ class App < Sinatra::Base
 
 	def render_page(title, body)
 		
+		# header
 		header = erb :"main/header", :locals => {
 			:site_name => SITE_NAME,
 			:current_class => self.class.to_s,
 			:controllers => controller_list
 		}
-
+		
+		# footer
 		footer = erb :"main/footer", :locals => {
 			:by_line => "&copy; #{Time.now.year} #{SITE_BY_LINE}",
 		}
 
+		# Main layout
 		erb :"main/layout", :locals => {
 			:header => header,
 			:footer => footer,
@@ -46,12 +49,12 @@ class App < Sinatra::Base
 		}
 	end
 
+	# Render an error page.
 	def error(error)
 		render_page("Error", "<div class=\"error\">" + error + "</div>")
 	end
 
 	# Fixme: it would be better to have each controller register its own tab and info.
-		
 	def controller_list
 		return [{'url'=>'/user/profile', 'title'=>'Profile', 'class'=>'Users'},
 				{'url'=>'/idea/list/', 'title'=>'Ideas', 'class'=>'Ideas'}]

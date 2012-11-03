@@ -2,6 +2,10 @@ require 'app'
 
 # This will be mounted on /contact
 class Ideas < App
+
+	before do
+		redirect '/user/login' if !logged_in?
+	end
 	
 	get '/' do
 		redirect '/idea/list'
@@ -19,7 +23,7 @@ class Ideas < App
 	end
 
 	def can_edit_idea(idea_id = 0)
-    return true if idea_id.to_i <= 0
+		return true if idea_id.to_i <= 0
 		query = "SELECT * FROM idea where idea_id='#{idea_id.to_i}' 
 			and created_by_user_id=(SELECT user_id FROM user WHERE email='%s')" % [db.escape_string(current_user)]
 		res = db.query(query)
