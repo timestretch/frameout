@@ -17,12 +17,19 @@ class UserHelper
 		return false
 	end
 	
+	# based on the html5 regex presented here:
+	# http://www.w3.org/TR/html5/states-of-the-type-attribute.html#e-mail-state
+	def email_valid?(email)
+		return email.match /^[a-zA-Z0-9\.\!\#\$\%\&\'\*\+\/\=\?\^\_\`\{\|\}\~\-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
+	end
+	
 	# Return nil on success, or the error string.
 	def register(params, ip)
 	
-		return "Please enter a valid email address" if !params[:email]
+		email = params[:email]
+		return "Please enter a valid email address" if !email_valid?(email)
 		
-		if email_registered?(params[:email])
+		if email_registered?(email)
 			return "Sorry, the email you provided is already in use." 
 		end
 		
@@ -41,7 +48,7 @@ class UserHelper
 				created=now(),
 				last_login_ip=INET_ATON(?)"
 			
-			statement.execute(params[:email], hash.to_s, ip)
+			statement.execute(email, hash.to_s, ip)
 			return nil
 		rescue
 			"There was an error creating your account. Please try again later."
