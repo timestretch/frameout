@@ -31,7 +31,6 @@ I use tabs, equivalent to 4 spaces. You may switch them to two spaces if that lo
 To-Do
 -----
 
-- Email validation when registering
 - Unit Tests
 - Clean up repeated erb template code.
 - Add some admin-only user management functionality.
