@@ -47,3 +47,4 @@ Thanks
 ------
 
 - namelessjon helped me break things up, refactor, and explain sessions.
+- Sean Hess's blog - https://github.com/seanhess/Blog
