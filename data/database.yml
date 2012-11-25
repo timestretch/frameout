@@ -1,0 +1,7 @@
+adapter: mysql
+host: localhost
+username: root
+password: 
+database: frameout
+encoding: utf8
+charset: utf8

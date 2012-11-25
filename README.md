@@ -1,7 +1,7 @@
 Frameout
 --------
 
-A simple Sinatra based example to register, login, and view a profile. It uses MySQL, and no ORM. This example shows one way to separate your code into multiple controllers with Sinatra.
+A simple Sinatra based example to register, login, and view a profile. It uses MySQL, and Sequel ORM. This example shows one way to separate your code into multiple controllers with Sinatra.
 
 Install
 -------
@@ -12,7 +12,12 @@ Create database tables.
 	mysql> create database frameout;
 	mysql> quit
 	
-	$ mysql -u root frameout < private/sql/main.sql
+	$ rake db:migrate
+
+Run the unit tests with "rake" or "rake spec".
+
+	$ rake
+	$ rake spec
 
 Test with shotgun.
 
@@ -34,7 +39,6 @@ To-Do
 - Unit Tests
 - Clean up repeated erb template code.
 - Add some admin-only user management functionality.
-- Use an ORM such as ActiveRecord or Sequel where appropriate.
 - Try Sequel Prepared statements.
 - Implement "fetch_hash" to ruby-mysql prepared statement results.
 - Javascript confirmation on delete

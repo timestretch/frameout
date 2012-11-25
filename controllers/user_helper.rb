@@ -1,20 +1,23 @@
-require 'digest/sha2'
-require 'bcrypt'
-
+# Users controller makes use of this
 class UserHelper
   
-	def initialize(db)
-		@db = db
+	def email_registered?(email)
+		user = User[:email => email]
+		return user ? true : false
 	end
 	
-	def email_registered?(email)
-		statement = @db.prepare "SELECT * FROM user where email=?"
-		statement.execute email
-		result = statement.fetch
-		if result && result.count > 0
-			return true
-		end
-		return false
+	def username_registered?(username)
+		user = User[:username => username]
+		return user ? true : false
+	end
+
+	# From http://blog.sosedoff.com/2009/04/16/inet_ntoa-and-inet_aton-in-ruby/
+	def inet_aton(ip)
+	    ip.split(/\./).map{|c| c.to_i}.pack("C*").unpack("N").first
+	end
+ 
+	def inet_ntoa(n)
+	    [n].pack("N").unpack("C*").join "."
 	end
 	
 	# based on the html5 regex presented here:
@@ -23,13 +26,25 @@ class UserHelper
 		return email.match /^[a-zA-Z0-9\.\!\#\$\%\&\'\*\+\/\=\?\^\_\`\{\|\}\~\-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
 	end
 	
+	# Contains only lowercase letters and underscores
+	def valid_username?(username)
+		return username.match(/^[0-9a-z_]+$/)
+	end
+	
 	# Return nil on success, or the error string.
 	def register(params, ip)
 	
 		email = params[:email]
+		username = params[:username]
+		
 		return "Please enter a valid email address" if !email_valid?(email)
+		return "Please enter a valid username" if !valid_username?(username)
 		
 		if email_registered?(email)
+			return "Sorry, the username you provided is already in use." 
+		end
+		
+		if username_registered?(username)
 			return "Sorry, the email you provided is already in use." 
 		end
 		
@@ -37,18 +52,14 @@ class UserHelper
 		return "The passwords did not match. Please retype them." if params[:password] != params[:password2] 
 		
 		begin
-			# Hash the password before running through bcrypt.
-			# Can always sha-256 before transmitting.
-			h = Digest::SHA2.new << params[:password]
-			hash = BCrypt::Password.create(h.to_s)
+			user = User.new
+			user.username = username
+			user.email = email
+			user.password = params[:password]
+			user.created = Time.now
+			last_login_ip = inet_aton(ip)
+			user.save
 			
-			statement = @db.prepare "INSERT INTO user SET
-				email=?,
-				password_hash=?,
-				created=now(),
-				last_login_ip=INET_ATON(?)"
-			
-			statement.execute(email, hash.to_s, ip)
 			return nil
 		rescue
 			"There was an error creating your account. Please try again later."
@@ -56,12 +67,9 @@ class UserHelper
 		
 	end
 	
-	def last_login_ip_for_email(email)
+	def last_login_for_user(user)
 		begin
-			res = @db.query("SELECT INET_NTOA(last_login_ip) as ip_addr 
-        FROM user where email='%s'" % @db.escape_string(email))
-			row = res.fetch_hash 
-			return row['ip_addr']
+			return inet_ntoa(user.last_login_ip)
 		rescue
 			return "Never logged in"
 		end
@@ -70,25 +78,23 @@ class UserHelper
 	# Login and verify password BCrypt hash.
 	def login(params, ip)
 	
-		res = @db.query("SELECT email, password_hash 
-      FROM user where email='%s'" % @db.escape_string(params[:email]))
-	
-		while row = res.fetch_hash 
-			
-			email = row['email']
-			password_hash = row['password_hash']
-			
-			h = Digest::SHA2.new << params[:password]
-			hash = BCrypt::Password.new(password_hash)
-      
-			if hash == h.to_s
-				statement = @db.prepare "UPDATE user SET last_login_ip=INET_ATON(?)"
-				statement.execute ip
-				return email
-			end
+		user = User[:email => params[:email]]
+		return nil if !user
 		
+		if user.valid_password?(params[:password])
+			user.last_login_ip = inet_aton(ip)
+			user.save
+			return user.username
 		end
-		
+		return nil
+	end
+	
+	def change_password(user, params, ip)
+		return "Please choose a password 6 characters, or greater in length." if params[:new_password].length < 6
+		return "The passwords did not match. Please retype them." if params[:new_password] != params[:new_password2] 
+		return "Sorry, your password is incorrect." if !user.valid_password?(params[:password])
+		user.password = params[:new_password]
+		user.save
 		return nil
 	end
 	

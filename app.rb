@@ -1,18 +1,21 @@
 # By Erik Wrenholt 2012
 
 require 'rubygems' if RUBY_VERSION < '1.9'
-require 'sinatra';
+require 'sinatra'
 require 'erb'
-require 'mysql'
+
+require './data/init'
+require './data/models'
 
 # Constants for Database Config and Site Name, Byline are in 'config.rb'
-
-require 'config'
+require './config'
 
 # These are the controllers you define.
+require './controllers/user_helper'
 
-require 'controllers/users'
-require 'controllers/user_helper'
+Sequel::DATABASES.each{|d| d.sql_log_level = :debug} 
+
+use Rack::Static, :urls => ['/js', '/css']
 
 # This class actually has no routes of its own (except for things like 'not_found')
 # It exists as a common point of inheritence, to hold certain universal settings
@@ -51,7 +54,7 @@ class App < Sinatra::Base
 
 	# Render an error page.
 	def error(error)
-		render_page("Error", "<div class=\"error\">" + error + "</div>")
+		halt 403, render_page("Error", "<div class=\"error\">" + error + "</div>")
 	end
 
 	# Fixme: it would be better to have each controller register its own tab and info.
@@ -60,17 +63,12 @@ class App < Sinatra::Base
 				{'url'=>'/idea/list/', 'title'=>'Ideas', 'class'=>'Ideas'}]
 	end
 
-	def db
-		@db ||= Mysql.new(DB_HOST, DB_USER, DB_PASS, DB_NAME)
-	end
-
 	def current_user
-		email = session[:user_email]
-		if email
-			email
-		else
-			nil
-		end
+		return session[:username]
+	end
+	
+	def user_model
+		@user_model ||= User[:username => current_user]
 	end
 
 	def logged_in?

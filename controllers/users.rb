@@ -1,5 +1,3 @@
-require 'app'
-
 # this is mounted on /user
 class Users < App
 
@@ -14,12 +12,22 @@ class Users < App
 	def register_locals(error = nil)
 		return :locals => {
 			:email => params[:email],
+			:username => params[:username],
 			:password => params[:password],
 			:password2 => params[:password2],
 			:error => error,
 			}
 	end
-
+	
+	def change_pass_locals (error = nil)
+		return :locals => {
+			:password => params[:password],
+			:new_password => params[:new_password],
+			:new_password2 => params[:new_password2],
+			:error => error,
+			}
+	end
+	
 	get '/' do
 		render_page("Users", "Users")
 	end
@@ -30,10 +38,10 @@ class Users < App
 	end
 
 	post '/login' do
-		user_helper = UserHelper.new(db)
-		email = user_helper.login(params, request.ip)
-		if email
-			session[:user_email] = email
+		user_helper = UserHelper.new
+		username = user_helper.login(params, request.ip)
+		if username
+			session[:username] = username
 			redirect '/user/profile'
 		else
 			body = erb :"user/login", login_locals("The username or password was incorrect.")
@@ -48,15 +56,33 @@ class Users < App
 
 	get '/register' do
 		body = erb :"user/register", register_locals
-		render_page("Login", body)
+		render_page("Register", body)
 	end
 
 	post '/register' do
-		user_helper = UserHelper.new(db)
+		user_helper = UserHelper.new
 		error = user_helper.register(params, request.ip)
 		if error
 			body = erb :"user/register", register_locals(error)
 			render_page("Register", body)
+		else
+			session[:username] = user_helper.login(params, request.ip)
+			redirect("/user/profile")
+		end
+	end
+	
+	get '/change_password' do
+		body = erb :"user/change_password", change_pass_locals
+		render_page("Change Password", body)
+	end
+	
+	post '/change_password' do
+		user = user_model
+		user_helper = UserHelper.new
+		error = user_helper.change_password(user, params, request.ip)
+		if error
+			body = erb :"user/change_password", change_pass_locals(error)
+			render_page("Change Password", body)
 		else
 			redirect("/user/profile")
 		end
@@ -65,9 +91,11 @@ class Users < App
 # These methods are only available to logged in users....
 	get '/profile' do
 		if logged_in?
+			user = User[:username=>current_user]
 			body = erb :"user/profile", :locals => { 
-					:user_email => current_user,
-					:ip_addr => UserHelper.new(db).last_login_ip_for_email(current_user) }
+					:gravatar => user.gravatar,
+					:username => user.username,
+					:ip_addr => UserHelper.new.last_login_for_user(user) }
 			render_page("Profile", body)
 		else
 			redirect("/")

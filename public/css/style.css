@@ -1,6 +1,7 @@
 body
 {
 	font-family: Helvetica;
+	margin: 0px;
 }
 
 .main
@@ -29,7 +30,9 @@ body
 
 .footer
 {
+	clear: both;
 	background-color: #EEE;
+	border-top: 20px solid white;
 	padding: 20px;
 }
 
@@ -67,22 +70,26 @@ input:not([type=submit]):not([type=file]):not([type=checkbox])
 
 .navbar
 {
-	margin-top: 8px;
 }
 
 .navitem
 {
-	background-color: #eee;
-	padding: 8px;
+	margin:0px;
 }
-.selected
+.navitem a
 {
-	background-color: #058;
+	background-color: #eee;
+	display:inline-block;
+	color: black;
+	text-decoration: none;
+	padding: 12px;
 }
 .selected a
 {
-color: white;
+	background-color: #058;
+	color: white;
 }
+
 
 /* Ideas */
 
