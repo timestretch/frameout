@@ -1,3 +1,6 @@
+# These are the controllers you define.
+require './helpers/user_helper'
+
 # this is mounted on /user
 class Users < App
 
@@ -91,11 +94,10 @@ class Users < App
 # These methods are only available to logged in users....
 	get '/profile' do
 		if logged_in?
-			user = User[:username=>current_user]
 			body = erb :"user/profile", :locals => { 
-					:gravatar => user.gravatar,
-					:username => user.username,
-					:ip_addr => UserHelper.new.last_login_for_user(user) }
+					:gravatar => user_model.gravatar,
+					:username => user_model.username,
+					:ip_addr => UserHelper.new.last_login_for_user(user_model) }
 			render_page("Profile", body)
 		else
 			redirect("/")

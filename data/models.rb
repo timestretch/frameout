@@ -3,11 +3,14 @@ require 'sequel'
 require 'digest/md5'
 require 'digest/sha2'
 require 'bcrypt'
+require './helpers/inet_ip'
 
-class User < Sequel::Model
+class User < Sequel::Model(:user)
 	
+	attr_accessor :login_ip
+
 	def gravatar
-		return Digest::MD5.hexdigest(email)
+		Digest::MD5.hexdigest(email)
 	end
 	
 	def password=(new_password)
@@ -18,12 +21,24 @@ class User < Sequel::Model
 	def valid_password?(password)
 		h = Digest::SHA2.new << password
 		hash = BCrypt::Password.new(self.password_hash)
-		return (hash == h.to_s)
+		(hash == h.to_s)
 	end
 	
+	def login_ip=(ip)
+		@login_ip = ip
+		self.last_login_ip = InetIp::inet_aton(ip)
+	end
+	
+	def login_ip
+		@login_ip ||= InetIp::inet_ntoa(self.last_login_ip)
+	end
+	
+	def to_json
+		super(:except => [:password_hash, :last_login_ip], :include => :login_ip)	
+	end
 end
 
-class Idea < Sequel::Model
+class Idea < Sequel::Model(:idea)
 	attr_accessor :username
 	attr_accessor :gravatar
 	

@@ -36,11 +36,11 @@ I use tabs, equivalent to 4 spaces. You may switch them to two spaces if that lo
 To-Do
 -----
 
-- Unit Tests
+- Forgot / reset Password link.
+- Find a good way to unit-test controllers
 - Clean up repeated erb template code.
 - Add some admin-only user management functionality.
 - Try Sequel Prepared statements.
-- Implement "fetch_hash" to ruby-mysql prepared statement results.
 - Javascript confirmation on delete
 
 Thanks

@@ -10,13 +10,6 @@ require './data/models'
 # Constants for Database Config and Site Name, Byline are in 'config.rb'
 require './config'
 
-# These are the controllers you define.
-require './controllers/user_helper'
-
-Sequel::DATABASES.each{|d| d.sql_log_level = :debug} 
-
-use Rack::Static, :urls => ['/js', '/css']
-
 # This class actually has no routes of its own (except for things like 'not_found')
 # It exists as a common point of inheritence, to hold certain universal settings
 # and helpers.
@@ -28,6 +21,12 @@ class App < Sinatra::Base
 	# Sinatra's sessions are signed by default, with a HMAC algorithm, which is
 	# the correct way to sign data so that it can be verified later.
 	set :session_secret, SITE_SECRET_KEY
+
+	helpers do
+		def h(text)
+			Rack::Utils.escape_html(text)
+		end
+	end
 
 	def render_page(title, body)
 		
@@ -59,12 +58,12 @@ class App < Sinatra::Base
 
 	# Fixme: it would be better to have each controller register its own tab and info.
 	def controller_list
-		return [{'url'=>'/user/profile', 'title'=>'Profile', 'class'=>'Users'},
+		[{'url'=>'/user/profile', 'title'=>'Profile', 'class'=>'Users'},
 				{'url'=>'/idea/list/', 'title'=>'Ideas', 'class'=>'Ideas'}]
 	end
 
 	def current_user
-		return session[:username]
+		session[:username]
 	end
 	
 	def user_model

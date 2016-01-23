@@ -1,13 +1,14 @@
-<h3>Login</h3>
+<form method="post" action="/user/login" class="panel">
 
-<% if error %>
-<div class="error"><%= error %></div>
-<% end %>
+	<h3>Sign in</h3>
 
-<form method="post" action="/user/login">
+	<% if error %>
+	<div class="error"><%= error %></div>
+	<% end %>
+
 	<div>
 		<label for="email">Email</label>
-		<input type="text" name="email" value="<%= email %>">
+		<input type="email" name="email" value="<%= email %>">
 	</div>
 	
 	<div>
@@ -17,7 +18,7 @@
 	
 	<div>
 		<div class="form_offset"></div>
-		<input type="submit" name="action" value="Login">
+		<input type="submit" name="action" value="Log In">
 	</div>
 	<br>
 	<div>
@@ -25,3 +26,5 @@
 		Don't have an account? <a href="/user/register">Sign up!</a>
 	</div>
 </form>
+
+</div>

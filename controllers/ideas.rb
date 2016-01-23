@@ -20,7 +20,7 @@ class Ideas < App
 
 	def can_edit_idea?(idea)
 		return true if idea.created_by_user_id == user_model.user_id
-		return false		
+		false		
 	end
 	
 	get '/edit/:idea_id' do
@@ -34,7 +34,6 @@ class Ideas < App
 		if !idea
 			return error("Sorry, that idea could not be retrieved.")
 		end
-		
 				
 		body = erb :"idea/header"
 		body << (erb :"idea/form", :locals => {:idea => idea})
@@ -76,13 +75,13 @@ class Ideas < App
 	get '/list/:filter?' do
 	
 		where = ''
-		where = " OR ideas.public=1" if params[:filter] == "all"
+		where = " OR idea.public=1" if params[:filter] == "all"
 		
 		# Fixme: this SQL is pretty lame
-		ideas = DB["SELECT ideas.*, username FROM ideas 
-		LEFT JOIN users on ideas.created_by_user_id=users.user_id
+		ideas = DB["SELECT idea.*, username FROM idea 
+		LEFT JOIN user on idea.created_by_user_id=user.user_id
 			WHERE created_by_user_id=? #{where}", user_model.user_id]
-		p ideas
+
 		header = erb :"idea/header"
 		body = erb :"idea/list", :locals => {"user_model"=>user_model, "ideas"=>ideas}
 		render_page("Idea", header + body)

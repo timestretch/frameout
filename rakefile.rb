@@ -13,4 +13,5 @@ namespace :db do
 end
 
 task :default => :spec
+task :test => :spec
 RSpec::Core::RakeTask.new(:spec)

@@ -1,11 +1,11 @@
 <% ideas.each do |idea| %>
 <div class="idea <%= "private" if idea[:public].to_i == 0 %>">
-		<h3><%= idea[:short_description]%></h3>
+		<h3><%= h idea[:short_description]%></h3>
 	
-		<p><%= idea[:long_description]%></p>
+		<p><%= h idea[:long_description]%></p>
 		
-		<p><%= idea[:created]%> by <%= idea[:username] %> 
-		<% if idea[:created_by_user_id] == user_model.user_id %>
+		<p><%= idea[:created]%> by <%= h idea[:username] %> 
+		<% if idea[:username] == current_user %>
 			<a href="/idea/edit/<%= idea[:idea_id]%>">Edit</a></p>
 		<% end %>
 </div>

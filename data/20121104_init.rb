@@ -1,7 +1,7 @@
 class BaseSchema < Sequel::Migration
 
 	def up
-		create_table! :users, :charset  => "utf8" do
+		create_table! :user, :charset  => "utf8" do
 			primary_key :user_id
 			
 			String :email, :unique => true
@@ -12,20 +12,20 @@ class BaseSchema < Sequel::Migration
 			Int :last_login_ip, :unsigned => true
 		end
 		
-		create_table! :ideas, :charset => "utf8" do
+		create_table! :idea, :charset => "utf8" do
 			primary_key :idea_id
 			String :short_description
 			Text :long_description
 			Int :public
 			Time :created
-			foreign_key :created_by_user_id, :users, :key => :user_id
+			foreign_key :created_by_user_id, :user, :key => :user_id
 		end
 		
 	end
 
 	def down
-		drop_table :ideas
-		drop_table :users
+		drop_table :idea
+		drop_table :user
 	end
 
 end

@@ -1,10 +1,13 @@
-<h3>Register</h3>
+<div class="container">
 
-<% if error %>
-<div class="error"><%= error %></div>
-<% end %>
 
-<form method="post" action="/user/register">
+<form method="post" action="/user/register" class="panel">
+
+	<h3>Register</h3>
+
+	<% if error %>
+	<div class="error"><%= error %></div>
+	<% end %>
 
 	<div>
 		<label for="email">Email</label>
@@ -13,9 +16,14 @@
 	
 	<div>
 		<label for="username">Username</label>
-		<input type="text" name="username" value="<%= username %>"> (lowercase letters, numbers, underscores)
+		<input type="text" name="username" value="<%= username %>"><br>
+		
 	</div>
-	
+	<div>
+		<div class="form_offset"></div>
+		<small>(lowercase letters, numbers, underscores)</small>
+	</div>
+	<br>
 	<div>
 		<label for="password">Password</label>
 		<input type="password" name="password" value="<%= password %>">
@@ -23,8 +31,7 @@
 	
 	<div>
 		<label for="password2">Repeat Password</label>
-		<input type="password" name="password2" value="<%= password2 %>"> (Enter Your Password Again)
-	</div>
+		<input type="password" name="password2" value="<%= password2 %>">	</div>
 	
 	<div>
 	<div class="form_offset"></div>
@@ -33,7 +40,9 @@
 	<br>
 	<div>
 		<div class="form_offset"></div>
-		Already have an account? <a href="/user/login">Login Here</a>
+		Already have an account? <a href="/user/login">Log In Here</a>
 	</div>
 	
 </form>
+
+</div>
