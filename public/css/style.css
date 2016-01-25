@@ -99,3 +99,12 @@ color: white;
 {
 	border: 1px solid #f00; 
 }
+
+table {
+	border-collapse: collapse;
+	border: 1px solid #ddd;
+}
+th, td {
+	border: 1px solid #ddd;
+	padding: 4px;	
+}

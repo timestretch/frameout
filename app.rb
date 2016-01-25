@@ -58,8 +58,10 @@ class App < Sinatra::Base
 
 	# Fixme: it would be better to have each controller register its own tab and info.
 	def controller_list
-		[{'url'=>'/user/profile', 'title'=>'Profile', 'class'=>'Users'},
-				{'url'=>'/idea/list/', 'title'=>'Ideas', 'class'=>'Ideas'}]
+		[
+			{'url'=>'/profile/profile', 'title'=>'Profile', 'class'=>'ProfileController'},
+			{'url'=>'/user/list', 'title'=>'Users', 'class'=>'UserController'},
+			{'url'=>'/idea/list/', 'title'=>'Ideas', 'class'=>'IdeaController'}]
 	end
 
 	def current_user

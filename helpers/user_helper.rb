@@ -51,7 +51,15 @@ class UserHelper
 			user.created = Time.now
 			user.login_ip = ip
 			user.save
-			
+
+			# Make the first user we create an admin
+			if user && user.user_id == 1
+				DB[:user_role_tie].insert(
+					user_id: 1,
+					role_id: 1,
+					created: Time.now
+				)
+			end
 			return nil
 		rescue Sequel::Error => ex
 			"There was an error creating your account. Please try again later. #{ex}"

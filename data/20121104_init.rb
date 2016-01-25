@@ -1,6 +1,6 @@
-class BaseSchema < Sequel::Migration
+Sequel.migration do
 
-	def up
+	up do
 		create_table! :user, :charset  => "utf8" do
 			primary_key :user_id
 			
@@ -23,7 +23,7 @@ class BaseSchema < Sequel::Migration
 		
 	end
 
-	def down
+	down do
 		drop_table :idea
 		drop_table :user
 	end

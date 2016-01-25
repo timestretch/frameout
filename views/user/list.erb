@@ -1,0 +1,16 @@
+<table>
+<tr>
+	<th align="left">Username</th>
+	<th align="left">Roles</th>
+	<th align="left">Privileges</th>
+	<th align="left">Created</th>
+</tr>
+<% users.map do |user| %>
+<tr>
+	<td><%= user[:username] %></td>
+	<td><%= user[:role_names] %></td>
+	<td><%= user[:privilege_names] %></td>
+	<td><%= user[:user_created] %></td>
+</tr>
+<% end %>
+</table>

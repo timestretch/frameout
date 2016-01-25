@@ -1,26 +1,29 @@
 
 # This will be mounted on /idea
-class Ideas < App
+class IdeaController < App
 
 	# Make sure we are authenticated before accessing this area.
 	before do
 		redirect '/user/login' if !logged_in?
 	end
 	
-	get '/' do
-		redirect '/idea/list'
-	end
-
-	get '/new' do
-		body = erb :"idea/header"
-		idea = Idea.new
-		body << (erb :"idea/form", :locals => {:idea => idea})
-		render_page("New Idea", body)
+	def header
+		erb :"idea/header"
 	end
 
 	def can_edit_idea?(idea)
 		return true if idea.created_by_user_id == user_model.user_id
 		false		
+	end
+
+	get '/' do
+		redirect '/idea/list'
+	end
+
+	get '/new' do
+		idea = Idea.new
+		body = header + (erb :"idea/form", :locals => {:idea => idea})
+		render_page("New Idea", body)
 	end
 	
 	get '/edit/:idea_id' do
@@ -35,8 +38,7 @@ class Ideas < App
 			return error("Sorry, that idea could not be retrieved.")
 		end
 				
-		body = erb :"idea/header"
-		body << (erb :"idea/form", :locals => {:idea => idea})
+		body = header + (erb :"idea/form", :locals => {:idea => idea})
 		render_page("Editing Idea", body)
 		
 	end
@@ -82,9 +84,8 @@ class Ideas < App
 		LEFT JOIN user on idea.created_by_user_id=user.user_id
 			WHERE created_by_user_id=? #{where}", user_model.user_id]
 
-		header = erb :"idea/header"
-		body = erb :"idea/list", :locals => {"user_model"=>user_model, "ideas"=>ideas}
-		render_page("Idea", header + body)
+		body = header + (erb :"idea/list", :locals => {"user_model"=>user_model, "ideas"=>ideas})
+		render_page("Idea", body)
 	end
 
 end

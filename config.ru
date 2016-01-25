@@ -1,15 +1,20 @@
 require './app'
-require './controllers/users'
-require './controllers/ideas'
+require './controllers/user_controller'
+require './controllers/idea_controller'
+require './controllers/profile_controller'
 
 map "/" do
 	run Root
 end
 
 map "/user" do
-	run Users
+	run UserController
+end
+
+map "/profile" do
+	run ProfileController
 end
 
 map "/idea" do
-	run Ideas
+	run IdeaController
 end

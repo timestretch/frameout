@@ -1,6 +1,5 @@
 require 'rubygems' if RUBY_VERSION < '1.9'
 require 'sequel'
-require 'digest/md5'
 require 'digest/sha2'
 require 'bcrypt'
 require './helpers/inet_ip'
@@ -9,9 +8,6 @@ class User < Sequel::Model(:user)
 	
 	attr_accessor :login_ip
 
-	def gravatar
-		Digest::MD5.hexdigest(email)
-	end
 	
 	def password=(new_password)
 		h = Digest::SHA2.new << new_password
@@ -40,7 +36,6 @@ end
 
 class Idea < Sequel::Model(:idea)
 	attr_accessor :username
-	attr_accessor :gravatar
 	
 end
 
