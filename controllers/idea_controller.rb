@@ -45,7 +45,6 @@ class IdeaController < App
 
 	def delete(idea)
 		idea.delete
-		idea.save
 	end
 
 	post '/save' do
