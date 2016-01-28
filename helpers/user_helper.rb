@@ -55,8 +55,14 @@ class UserHelper
 			# Make the first user we create an admin
 			if user && user.user_id == 1
 				DB[:user_role_tie].insert(
-					user_id: 1,
-					role_id: 1,
+					user_id: user.user_id,
+					role_id: 1,	#admin
+					created: Time.now
+				)
+			else
+				DB[:user_role_tie].insert(
+					user_id: user.user_id,
+					role_id: 2, #user
 					created: Time.now
 				)
 			end
