@@ -6,12 +6,12 @@ require 'spec_helper'
 describe "Login" do
 		
 	before do
-		Capybara.app = Users
+		Capybara.app = ProfileController
 		visit '/login'
 	end
 	
-	it "has a Login in h3" do
-		expect(page).to have_selector('h3', :text => 'Login')
+	it "has a 'Log In' in h3" do
+		expect(page).to have_selector('h3', :text => 'Log In')
 	end
 	
 end

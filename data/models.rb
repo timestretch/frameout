@@ -13,11 +13,11 @@ class User < Sequel::Model(:user)
 		h = Digest::SHA2.new << new_password
 		self.password_hash = BCrypt::Password.create(h.to_s)
 	end
-	
+
 	def valid_password?(password)
 		h = Digest::SHA2.new << password
 		hash = BCrypt::Password.new(self.password_hash)
-		(hash == h.to_s)
+		hash == h.to_s
 	end
 	
 	def login_ip=(ip)
